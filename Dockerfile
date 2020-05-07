@@ -1,4 +1,4 @@
-FROM php:7 as silverstripe
+FROM php:7-apache-buster as silverstripe
 
 RUN echo "ServerName localhost" > /etc/apache2/conf-available/fqdn.conf \
     && echo "date.timezone = Europe/Berlin" > /usr/local/etc/php/conf.d/timezone.ini \
