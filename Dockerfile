@@ -1,27 +1,30 @@
-FROM php:7-apache-buster as silverstripe
-
+FROM php:apache-buster as silverstripe
+LABEL maintainer="SilverStripe Cloud <dev@silverstripecloud.com>"
 RUN echo "ServerName localhost" > /etc/apache2/conf-available/fqdn.conf \
     && echo "date.timezone = Europe/Berlin" > /usr/local/etc/php/conf.d/timezone.ini \
     && a2enmod \
         rewrite \
         expires \
         remoteip \
-        cgid
-
-RUN apt-get update -y \
+        cgid \
+    && apt-get update -y \
     && apt-get install -y --no-install-recommends \
+        autoconf \
+        imagemagick-common \
+        libpng-dev \
+        libxslt-dev \
+        make \
         libgd-dev \
         libicu-dev \
+        libmagickwand-dev \
         libtidy-dev \
-        libxslt-dev \
-        zlib1g-dev
-
-# Install PHP Extensions
-RUN docker-php-ext-configure intl \
+    && docker-php-ext-configure gd --with-libdir=/usr/include/ \
+    && docker-php-ext-configure intl \
     && docker-php-ext-configure mysqli --with-mysqli=mysqlnd \
-    && docker-php-ext-configure gd --with-libdir=/usr/include/ --enable-gd --with-jpeg --with-freetype
-
-RUN docker-php-ext-install -j$(nproc) \
+    && docker-php-ext-configure tidy \
+    && pecl channel-update pecl.php.net \
+    && pecl install imagick \
+    && docker-php-ext-install \
         intl \
         gd \
         mysqli \
@@ -29,4 +32,17 @@ RUN docker-php-ext-install -j$(nproc) \
         pdo_mysql \
         soap \
         tidy \
-        xsl
+        xsl \
+    && docker-php-ext-enable imagick \
+    && apt-get purge -y \
+        autoconf \
+        imagemagick-common \
+        libpng-dev \
+        libxslt-dev \
+        make \
+        libgd-dev \
+        libicu-dev \
+        libmagickwand-dev \
+        libtidy-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
