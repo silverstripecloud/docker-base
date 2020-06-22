@@ -1,27 +1,25 @@
-FROM php:7-apache-buster as silverstripe
-
-RUN echo "ServerName localhost" > /etc/apache2/conf-available/fqdn.conf \
-    && echo "date.timezone = Europe/Berlin" > /usr/local/etc/php/conf.d/timezone.ini \
-    && a2enmod \
-        rewrite \
-        expires \
-        remoteip \
-        cgid
-
-RUN apt-get update -y \
-    && apt-get install -y --no-install-recommends \
-        libgd-dev \
-        libicu-dev \
-        libtidy-dev \
+FROM php:fpm-alpine3.11 as silverstripe
+LABEL maintainer="SilverStripe Cloud <dev@silverstripecloud.com>"
+RUN apk add --no-cache \
+        autoconf \
+        imagemagick-dev \
+        libpng-dev \
         libxslt-dev \
-        zlib1g-dev
-
-# Install PHP Extensions
-RUN docker-php-ext-configure intl \
+        make \
+        icu-dev \
+        libgdata-dev \
+        tidyhtml-dev \
+        zlib-dev \
+        icu-libs \
+        libjpeg \
+        tidyhtml-libs \
+    && docker-php-ext-configure gd --with-libdir=/usr/include/ --enable-gd --with-freetype \
+    && docker-php-ext-configure intl \
     && docker-php-ext-configure mysqli --with-mysqli=mysqlnd \
-    && docker-php-ext-configure gd --with-libdir=/usr/include/ --enable-gd --with-jpeg --with-freetype
-
-RUN docker-php-ext-install -j$(nproc) \
+    && docker-php-ext-configure tidy \
+    && pecl channel-update pecl.php.net \
+    && pecl install imagick \
+    && docker-php-ext-install \
         intl \
         gd \
         mysqli \
@@ -29,4 +27,15 @@ RUN docker-php-ext-install -j$(nproc) \
         pdo_mysql \
         soap \
         tidy \
-        xsl
+        xsl \
+    && docker-php-ext-enable imagick \
+    && apk del \
+        autoconf \
+        imagemagick-dev \
+        libpng-dev \
+        libxslt-dev \
+        make \
+        icu-dev \
+        libgdata-dev \
+        tidyhtml-dev \
+        zlib-dev
