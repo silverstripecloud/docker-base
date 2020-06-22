@@ -1,2 +1,2 @@
-# base
-base docker image for silverstripe
+# SilverStripeCloud / docker-base
+SilverStripeCloud docker image (base) for PHP .
