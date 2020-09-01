@@ -6,6 +6,7 @@ RUN apk add --no-cache \
         libpng-dev \
         libxslt-dev \
         make \
+        php7-pecl-imagick \
         icu-dev \
         libgdata-dev \
         tidyhtml-dev \
@@ -35,6 +36,7 @@ RUN apk add --no-cache \
         libpng-dev \
         libxslt-dev \
         make \
+        php7-pecl-imagick \
         icu-dev \
         libgdata-dev \
         tidyhtml-dev \
