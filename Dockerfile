@@ -10,10 +10,10 @@ RUN echo "ServerName localhost" > /etc/apache2/conf-available/fqdn.conf \
     && apt-get update -y \
     && apt-get install -y --no-install-recommends \
         autoconf \
-        imagemagick-common \
         libpng-dev \
         libxslt-dev \
         make \
+        imagemagick-common \
         libgd-dev \
         libicu-dev \
         libmagickwand-dev \
@@ -35,10 +35,10 @@ RUN echo "ServerName localhost" > /etc/apache2/conf-available/fqdn.conf \
     && docker-php-ext-enable imagick \
     && apt-get purge -y \
         autoconf \
-        imagemagick-common \
         libpng-dev \
         libxslt-dev \
         make \
+        imagemagick-common \
         libgd-dev \
         libicu-dev \
         libmagickwand-dev \
