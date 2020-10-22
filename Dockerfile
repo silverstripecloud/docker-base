@@ -1,4 +1,4 @@
-FROM php:7.2.34-zts-alpine as silverstripe
+FROM php:7.2.34-fpm-alpine3.12 as silverstripe
 LABEL maintainer="SilverStripe Cloud <dev@silverstripecloud.com>"
 RUN apk add --no-cache \
         autoconf \
@@ -12,7 +12,7 @@ RUN apk add --no-cache \
         icu-libs \
         libjpeg \
         tidyhtml-libs \
-    && docker-php-ext-configure gd --with-libdir=/usr/include/ \
+    && docker-php-ext-configure gd --with-libdir=/usr/include/ --enable-gd --with-freetype \
     && docker-php-ext-configure intl \
     && docker-php-ext-configure mysqli --with-mysqli=mysqlnd \
     && docker-php-ext-configure tidy \
