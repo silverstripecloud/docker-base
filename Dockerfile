@@ -1,24 +1,18 @@
-FROM php:7.3.24-apache-stretch as silverstripe
+FROM php:8.0.0RC5-cli-alpine as silverstripe
 LABEL maintainer="SilverStripe Cloud <dev@silverstripecloud.com>"
-RUN echo "ServerName localhost" > /etc/apache2/conf-available/fqdn.conf \
-    && echo "date.timezone = Europe/Berlin" > /usr/local/etc/php/conf.d/timezone.ini \
-    && a2enmod \
-        rewrite \
-        expires \
-        remoteip \
-        cgid \
-    && apt-get update -y \
-    && apt-get install -y --no-install-recommends \
+RUN apk add --no-cache \
         autoconf \
         libpng-dev \
         libxslt-dev \
         make \
-        imagemagick-common \
-        libgd-dev \
-        libicu-dev \
-        libmagickwand-dev \
-        libtidy-dev \
-    && docker-php-ext-configure gd --with-libdir=/usr/include/ \
+        icu-dev \
+        libgdata-dev \
+        tidyhtml-dev \
+        zlib-dev \
+        icu-libs \
+        libjpeg \
+        tidyhtml-libs \
+    && docker-php-ext-configure gd --with-libdir=/usr/include/ --enable-gd --with-freetype \
     && docker-php-ext-configure intl \
     && docker-php-ext-configure mysqli --with-mysqli=mysqlnd \
     && docker-php-ext-configure tidy \
@@ -34,15 +28,12 @@ RUN echo "ServerName localhost" > /etc/apache2/conf-available/fqdn.conf \
         tidy \
         xsl \
     && docker-php-ext-enable imagick \
-    && apt-get purge -y \
+    && apk del \
         autoconf \
         libpng-dev \
         libxslt-dev \
         make \
-        imagemagick-common \
-        libgd-dev \
-        libicu-dev \
-        libmagickwand-dev \
-        libtidy-dev \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+        icu-dev \
+        libgdata-dev \
+        tidyhtml-dev \
+        zlib-dev
