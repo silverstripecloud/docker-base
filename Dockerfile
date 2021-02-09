@@ -1,4 +1,4 @@
-FROM php:7.3.27-apache-stretch as silverstripe
+FROM php:7.3.27-apache-buster as silverstripe
 LABEL maintainer="SilverStripe Cloud <dev@silverstripecloud.com>"
 RUN echo "ServerName localhost" > /etc/apache2/conf-available/fqdn.conf \
     && echo "date.timezone = Europe/Berlin" > /usr/local/etc/php/conf.d/timezone.ini \
@@ -9,10 +9,8 @@ RUN echo "ServerName localhost" > /etc/apache2/conf-available/fqdn.conf \
         cgid \
     && apt-get update -y \
     && apt-get install -y --no-install-recommends \
-        autoconf \
-        libpng-dev \
-        libxslt-dev \
-        make \
+        imagemagick-dev \
+        php7-pecl-imagick \
         imagemagick-common \
         libgd-dev \
         libicu-dev \
@@ -35,10 +33,8 @@ RUN echo "ServerName localhost" > /etc/apache2/conf-available/fqdn.conf \
         xsl \
     && docker-php-ext-enable imagick \
     && apt-get purge -y \
-        autoconf \
-        libpng-dev \
-        libxslt-dev \
-        make \
+        imagemagick-dev \
+        php7-pecl-imagick \
         imagemagick-common \
         libgd-dev \
         libicu-dev \
