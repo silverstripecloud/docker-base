@@ -1,4 +1,4 @@
-FROM php:7.4.16-apache-buster as silverstripe
+FROM php:7.3.27-apache-stretch as silverstripe
 LABEL maintainer="SilverStripe Cloud <dev@silverstripecloud.com>"
 RUN echo "ServerName localhost" > /etc/apache2/conf-available/fqdn.conf \
     && echo "date.timezone = Europe/Berlin" > /usr/local/etc/php/conf.d/timezone.ini \
