@@ -1,4 +1,4 @@
-FROM php:8.1-rc-alpine as silverstripe
+FROM php:8.1.0RC2-cli-alpine3.14 as silverstripe
 LABEL maintainer="SilverStripe Cloud <dev@silverstripecloud.com>"
 RUN apk add --no-cache \
         autoconf \
@@ -12,9 +12,6 @@ RUN apk add --no-cache \
         icu-libs \
         libjpeg \
         tidyhtml-libs \
-    && apk add --no-cache -t extra-build-dependancies \
-        php-pear \
-        php7-pecl-imagick-dev \
     && docker-php-ext-configure gd --with-libdir=/usr/include/ --enable-gd --with-freetype \
     && docker-php-ext-configure intl \
     && docker-php-ext-configure mysqli --with-mysqli=mysqlnd \
@@ -39,5 +36,4 @@ RUN apk add --no-cache \
         icu-dev \
         libgdata-dev \
         tidyhtml-dev \
-        zlib-dev \
-    && apk del extra-build-dependancies
+        zlib-dev
