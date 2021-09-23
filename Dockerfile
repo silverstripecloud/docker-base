@@ -1,24 +1,26 @@
-FROM php:8.1-rc-alpine as silverstripe
+FROM php:apache-bullseye as silverstripe
 LABEL maintainer="SilverStripe Cloud <dev@silverstripecloud.com>"
-RUN apk add --no-cache \
+RUN echo "ServerName localhost" > /etc/apache2/conf-available/fqdn.conf \
+    && echo "date.timezone = Europe/Berlin" > /usr/local/etc/php/conf.d/timezone.ini \
+    && a2enmod \
+        rewrite \
+        expires \
+        remoteip \
+        cgid \
+    && apt-get update -y \
+    && apt-get install -y --no-install-recommends \
         autoconf \
         libpng-dev \
         libxslt-dev \
         make \
-        icu-dev \
-        libgdata-dev \
-        tidyhtml-dev \
-        zlib-dev \
-        icu-libs \
-        libjpeg \
-        tidyhtml-libs \
-    && apk add --no-cache -t extra-build-dependancies \
-        php-pear \
-        php7-pecl-imagick-dev \
-    && docker-php-ext-configure gd --with-libdir=/usr/include/ --enable-gd --with-freetype \
+        imagemagick-common \
+        libgd-dev \
+        libicu-dev \
+        libmagickwand-dev \
+        libtidy-dev \
     && docker-php-ext-configure intl \
     && docker-php-ext-configure mysqli --with-mysqli=mysqlnd \
-    && docker-php-ext-configure tidy \
+    && docker-php-ext-configure gd --with-libdir=/usr/include/ --enable-gd --with-jpeg --with-freetype \
     && pecl channel-update pecl.php.net \
     && pecl install imagick \
     && docker-php-ext-install \
@@ -31,13 +33,15 @@ RUN apk add --no-cache \
         tidy \
         xsl \
     && docker-php-ext-enable imagick \
-    && apk del \
+    && apt-get purge -y \
         autoconf \
         libpng-dev \
         libxslt-dev \
         make \
-        icu-dev \
-        libgdata-dev \
-        tidyhtml-dev \
-        zlib-dev \
-    && apk del extra-build-dependancies
+        imagemagick-common \
+        libgd-dev \
+        libicu-dev \
+        libmagickwand-dev \
+        libtidy-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
