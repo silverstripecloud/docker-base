@@ -1,4 +1,4 @@
-FROM php:8.0.12-apache-buster as silverstripe
+FROM php:8.0.12-apache-bullseye as silverstripe
 LABEL maintainer="SilverStripe Cloud <dev@silverstripecloud.com>"
 RUN echo "ServerName localhost" > /etc/apache2/conf-available/fqdn.conf \
     && echo "date.timezone = Europe/Berlin" > /usr/local/etc/php/conf.d/timezone.ini \
@@ -18,10 +18,9 @@ RUN echo "ServerName localhost" > /etc/apache2/conf-available/fqdn.conf \
         libicu-dev \
         libmagickwand-dev \
         libtidy-dev \
-    && docker-php-ext-configure gd --with-libdir=/usr/include/ \
     && docker-php-ext-configure intl \
     && docker-php-ext-configure mysqli --with-mysqli=mysqlnd \
-    && docker-php-ext-configure tidy \
+    && docker-php-ext-configure gd --with-libdir=/usr/include/ --enable-gd --with-jpeg --with-freetype \
     && pecl channel-update pecl.php.net \
     && pecl install imagick \
     && docker-php-ext-install \
