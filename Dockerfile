@@ -1,4 +1,4 @@
-FROM php:8.1.13-fpm-alpine as silverstripe
+FROM php:8.1.13-cli-alpine3.16 as silverstripe
 LABEL maintainer="SilverStripe Cloud <dev@silverstripecloud.com>"
 RUN apk add --no-cache \
         autoconf \
